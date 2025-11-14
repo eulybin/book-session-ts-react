@@ -1,19 +1,41 @@
-import type { ReactNode } from 'react';
-import { Link } from 'react-router-dom';
+import type { ComponentPropsWithoutRef, ReactNode } from 'react';
+import { Link, type LinkProps } from 'react-router-dom';
 
-type ButtonProps = {
+type BaseButtonProps = {
     children: ReactNode;
-    to?: string;
     textOnly?: boolean;
 };
 
-export default function Button({ children, to, textOnly }: ButtonProps) {
-    if (to) {
+type ButtonAsButton = BaseButtonProps &
+    ComponentPropsWithoutRef<'button'> & {
+        to?: never;
+    };
+
+type ButtonAsLink = LinkProps &
+    BaseButtonProps & {
+        to: string;
+    };
+
+type ButtonProps = ButtonAsButton | ButtonAsLink;
+
+// type predicate
+const isLink = (props: ButtonProps): props is ButtonAsLink => {
+    return 'to' in props;
+};
+
+export default function Button(props: ButtonProps) {
+    if (isLink(props)) {
+        const { textOnly, children, to, ...otherProps } = props;
         return (
-            <Link className={`button ${textOnly ? 'button--text-only' : ''}`} to={to}>
+            <Link {...otherProps} to={to} className={`button ${textOnly ? 'button--text-only' : ''}`}>
                 {children}
             </Link>
         );
     }
-    return <button className={`button ${textOnly ? 'button--text-only' : ''}`}>{children}</button>;
+    const { textOnly, children, ...otherProps } = props;
+    return (
+        <button {...otherProps} className={`button ${textOnly ? 'button--text-only' : ''}`}>
+            {children}
+        </button>
+    );
 }

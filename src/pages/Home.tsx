@@ -1,7 +1,6 @@
 import studentsImg from '../assets/students.jpg';
 import listImg from '../assets/list.jpg';
 import certificateImg from '../assets/certificate.jpg';
-import Button from '../components/UI/Button';
 
 export default function HomePage() {
     return (
