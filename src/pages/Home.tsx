@@ -1,8 +1,14 @@
 import studentsImg from '../assets/students.jpg';
 import listImg from '../assets/list.jpg';
 import certificateImg from '../assets/certificate.jpg';
+import Button from '../components/UI/Button';
+import type { ModalHandle } from '../components/UI/Modal';
+import { useRef } from 'react';
+import Modal from '../components/UI/Modal';
 
 export default function HomePage() {
+    const customModal = useRef<ModalHandle>(null);
+
     return (
         <main id='home-page'>
             <h2>Our Mission: Your Success</h2>
@@ -38,6 +44,12 @@ export default function HomePage() {
                     </p>
                 </div>
             </section>
+
+            <Button onClick={() => customModal.current?.open()}>Show Modal</Button>
+            <Modal ref={customModal} onClose={() => customModal.current?.close()}>
+                Some info here...
+                <Button onClick={() => customModal.current?.close()}>Close Modal</Button>
+            </Modal>
         </main>
     );
 }
